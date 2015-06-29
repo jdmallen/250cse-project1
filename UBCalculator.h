@@ -16,6 +16,7 @@
 #include <set>
 #include <map>
 #include <stack>
+#include <cstdlib>
 #include <cstdarg>
 #include "Lexer.h"
 #include "error_handling.h"
@@ -23,13 +24,15 @@
 using std::map;
 using std::string;
 using std::vector;
+using std::stack;
 
 
 enum operation {
     ADD,
     SUBTRACT,
     MULTIPLY,
-    DIVIDE
+    DIVIDE,
+    NEGATE
 };
 
 /**
@@ -41,20 +44,21 @@ enum operation {
  */
 class UBCalculator {
 public:
-    // constructor
-    UBCalculator() { };
+    UBCalculator(Lexer lex, Token tok) : _lex(lex), _tok(tok), _lineReady(false){};
 
-    // a couple of modifiers
     void setLine(string); // Get input from user
-    long double sum(long double oper1, long double oper2);
-    long double sum(vector<long double> operands);
-    long double mult(long double oper1, long double oper2);
-    long double mult(vector<long double> operands);
-    long double div(long double dividend, long double divisor);
-    long double div(vector<long double> operands);
+    bool isWellFormed(); // check line is well-formed
+    void setRpn();
+    double rpnEval();
 
-    long double neg(long double operand);
-    long double inv(long double operand);
+    double sum(int n, ...); // add and subtract
+    double mult(int n, ...); // multiply
+    double div(int n, ...); // divide (first argument is dividend, n > 0)
+
+    long double neg(long double operand); // negate
+    long double inv(long double operand); // invert
+
+
 private:
     static map<char, char> createDelimMatch() {
         map<char, char> m;
@@ -70,6 +74,7 @@ private:
         m['-'] = 0;
         m['*'] = 1;
         m['/'] = 1;
+        m['@'] = 2; // unary minus
         m['('] = -1;
         m['{'] = -1;
         m['['] = -1;
@@ -77,13 +82,18 @@ private:
         return m;
     }
 
-    static map<char, int> precedenceMap;
-    const static map<char, char> delimMatch;
-    const static string openDelims;
-    const static string closeDelims;
+    static map<char, int> _precedenceMap;
+    const static map<char, char> _delimMatch;
+    const static string _openDelims;
+    const static string _closeDelims;
 
-//    map vars;
-    string currentLine;
+    map<string,double> _vars;
+    string _currentLine;
+    Lexer _lex;
+    Token _tok;
+    vector<Token> _tokens;
+    bool _lineReady;
+    vector<Token> _postfixExp;
 
 };
 

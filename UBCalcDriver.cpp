@@ -4,41 +4,36 @@
 #include "Lexer.h"
 
 using std::cout;
+using std::cin;
 using std::endl;
+using std::runtime_error;
 
 int main() {
-	UBCalculator calculator;
-	Lexer lexer;
-	Token tok;
-	string line;
+    Lexer lexer;
+    Token tok;
+    UBCalculator calculator(lexer,tok);
+    string line;
 
-    vector<long double> input;
-    input.push_back(42);
-    input.push_back(7);
-    input.push_back(3);
+    while (cin) {
+        cout << ">>> ";
+        getline(cin, line);
+        if ((line == "quit") || (line == "exit")) {
+            exit(0);
+        }
+        if (line == "") {
+            continue;
+        }
+        try {
+            calculator.setLine(line);
+//            calculator.setLine("24+4-15*8/(2+5*2-8)+4");
+//            calculator.setLine("24+4-15*8/4");
+//            calculator.setLine("((((5*2)/4)*6)*4)/5");
+            calculator.setRpn();
+            cout << ">>> " << calculator.rpnEval() << endl;
+        } catch (runtime_error &e) {
+            error_return(e.what());
+        }
+    }
 
-    cout << calculator.sum(input) << endl;
-    cout << calculator.mult(input) << endl;
-    cout << calculator.div(input) << endl;
-
-//    while (cin) {
-//        cout << ">>> ";
-//		getline(cin, line);
-//		if ((line == "quit") || (line == "exit"))
-//		{
-//			exit(0);
-//		}
-//		if (line == "")
-//		{
-//			continue;
-//		}
-//		try{
-//			calculator.setLine(line);
-//		}
-//		catch (runtime_error &e) {
-//			error_return(e.what());
-//		}
-//
-//    }
     return 0;
 }
