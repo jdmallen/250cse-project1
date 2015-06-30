@@ -47,24 +47,26 @@ public:
     UBCalculator(Lexer lex, Token tok) : _lex(lex), _tok(tok), _lineReady(false){};
 
     void setLine(string); // Get input from user
-    bool isWellFormed(); // check line is well-formed
-    void setRpn();
+    void isWellFormed(); // check line is well-formed
+    double setRpn();
     double rpnEval();
+    void setVar();
 
     double sum(int n, ...); // add and subtract
     double mult(int n, ...); // multiply
     double div(int n, ...); // divide (first argument is dividend, n > 0)
 
-    long double neg(long double operand); // negate
-    long double inv(long double operand); // invert
+    double neg(double operand); // negate
+    double inv(double operand); // invert
+
 
 
 private:
     static map<char, char> createDelimMatch() {
         map<char, char> m;
-        m[')'] = '(';
-        m['}'] = '{';
-        m[']'] = '[';
+        m['('] = ')';
+        m['{'] = '}';
+        m['['] = ']';
         return m;
     }
 
@@ -87,13 +89,14 @@ private:
     const static string _openDelims;
     const static string _closeDelims;
 
-    map<string,double> _vars;
+    map<string,Token> _varMap;
     string _currentLine;
     Lexer _lex;
     Token _tok;
     vector<Token> _tokens;
     bool _lineReady;
     vector<Token> _postfixExp;
+    vector<string> _variables;
 
 };
 

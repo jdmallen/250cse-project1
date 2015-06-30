@@ -24,12 +24,15 @@ int main() {
             continue;
         }
         try {
+
+//            calculator.setLine("a=b=c=3");
+////            calculator.setLine("clear b");
+//            calculator.setLine("a+b+c");
+//            calculator.setLine("b");
+//            calculator.setLine("c");
+//            calculator.setLine("d");
+
             calculator.setLine(line);
-//            calculator.setLine("24+4-15*8/(2+5*2-8)+4");
-//            calculator.setLine("24+4-15*8/4");
-//            calculator.setLine("((((5*2)/4)*6)*4)/5");
-            calculator.setRpn();
-            cout << ">>> " << calculator.rpnEval() << endl;
         } catch (runtime_error &e) {
             error_return(e.what());
         }
